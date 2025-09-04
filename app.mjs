@@ -233,6 +233,57 @@ app.get("/questions/:questionId/answers", async (req, res) => {
   }
 });
 
+
+
+/**
+ * DELETE /questions/:questionId/answers
+ * 
+ * โจทย์บอกว่า:
+ * - ผู้ใช้งานสามารถลบคำถามได้
+ * - เมื่อลบคำถามออก คำตอบก็จะถูกลบตามคำถามนั้นๆ ด้วย
+ * 
+ * แต่ API documentation กำหนด endpoint แยกกันชัดเจนว่า:
+ * - DELETE /questions/:questionId -> ลบคำถาม
+ * - DELETE /questions/:questionId/answers -> ลบคำตอบของคำถามนั้น
+ * 
+ * เนื่องจากคำอธิบายในโจทย์กับ API doc ไม่สอดคล้องกัน
+ * จึงผมตัดสินใจทำตาม API doc เพราะเป็นมาตรฐานที่ควรปฏิบัติตาม
+ * 
+ * โดย endpoint นี้จะลบเฉพาะคำตอบของคำถามที่ระบุ ไม่ได้ลบคำถามเอง
+ */
+
+
+app.delete("/questions/:questionId/answers", async (req, res) => {
+  try {
+    const questionId = Number(req.params.questionId);
+
+    const questionResult = await connectionPool.query(
+      `SELECT id FROM questions WHERE id = $1`,
+      [questionId]
+    );
+
+    if (questionResult.rowCount === 0) {
+      return res.status(404).json({ message: "Question not found." });
+    }
+
+
+    await connectionPool.query(
+      `DELETE FROM answers WHERE question_id = $1`,
+      [questionId]
+    );
+
+    return res.status(200).json({
+      message: "All answers for the question have been deleted successfully."
+    });
+  } catch (error) {
+    console.error("Error in DELETE /questions/:questionId/answers:", error.message);
+    return res.status(500).json({
+      message: "Unable to delete answers.",
+      error: error.message,
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running at ${port}`);
 });
