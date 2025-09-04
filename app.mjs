@@ -4,6 +4,7 @@ import { Router } from "express";
 import questionValidationCreate from "./middleware/questionValidationCreate.mjs";
 import questionValidationUpdate from "./middleware/questionValidationUpdate.mjs";
 import questionSearchValidation from "./middleware/questionValidationSearch.mjs";
+import answerValidationCreate from "./middleware/answerValidationCreate.mjs";
 
 const app = express();
 const port = 4000;
@@ -155,6 +156,7 @@ app.put("/questions/:questionId", questionValidationUpdate, async (req, res) => 
   }
 });
 
+/** DELETE QUESTION */
 app.delete("/questions/:questionId", async (req, res) => {
   try {
     const questionIdFromUser = Number(req.params.questionId);
@@ -173,6 +175,32 @@ app.delete("/questions/:questionId", async (req, res) => {
     return res.status(500).json({
       message: "Unable to delete question.",
       error: error.message,
+    });
+  }
+});
+
+/** CREATE ANSWERS */
+app.post("/questions/:questionId/answers", answerValidationCreate, async (req, res) => {
+  const questionId = Number(req.params.questionId);
+  const content = req.body.content;
+
+  try {
+    const result = await connectionPool.query(
+      `INSERT INTO answers (question_id, content)
+       VALUES ($1, $2)
+       RETURNING id`,
+      [questionId, content]
+    );
+
+    return res.status(201).json({
+      message: "Answer created successfully.",
+      id: result.rows[0].id
+    });
+  } catch (error) {
+    console.error("Error in POST /questions/:questionId/answers:", error.message);
+    return res.status(500).json({
+      message: "Unable to create answers.",
+      error: error.message
     });
   }
 });
