@@ -112,6 +112,28 @@ app.put("/questions/:questionId", questionValidationUpdate, async (req, res) => 
   }
 });
 
+app.delete("/questions/:questionId", async (req, res) => {
+  try {
+    const questionIdFromUser = Number(req.params.questionId);
+    const result = await connectionPool.query(
+      `DELETE FROM questions WHERE id = $1`,
+      [questionIdFromUser]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Question not found." });
+    }
+
+    return res.status(200).json({ message: "Question post has been deleted successfully." });
+  } catch (error) {
+    console.error("Error in DELETE /questions/:questionId:", error.message);
+    return res.status(500).json({
+      message: "Unable to delete question.",
+      error: error.message,
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running at ${port}`);
 });
