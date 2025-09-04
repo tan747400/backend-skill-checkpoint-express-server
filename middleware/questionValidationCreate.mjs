@@ -1,4 +1,4 @@
-function ValidationQuestionData(req, res, next) {
+function questionValidationCreate(req, res, next) {
     const { title, description, category } = req.body || {};
   
     // --- 1) เช็คว่ามีค่าครบทั้ง 3 อันไหม ---
@@ -25,5 +25,5 @@ function ValidationQuestionData(req, res, next) {
     next();
   }
   
-  export default ValidationQuestionData;
+  export default questionValidationCreate;
   

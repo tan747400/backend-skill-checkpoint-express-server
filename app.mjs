@@ -1,6 +1,6 @@
 import express from "express";
 import connectionPool from "./utils/db.mjs";
-import ValidationQuestionData from "./middleware/questionValidation.mjs";
+import questionValidationCreate from "./middleware/questionValidationCreate.mjs";
 
 const app = express();
 const port = 4000;
@@ -12,7 +12,7 @@ app.get("/test", (req, res) => {
 });
 
 /** CREATE QUESTION */
-app.post("/questions",  ValidationQuestionData, async (req, res) => {
+app.post("/questions",  questionValidationCreate, async (req, res) => {
   const newQuestion = {
     title: req.body.title,
     description: req.body.description,
