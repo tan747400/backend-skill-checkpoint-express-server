@@ -3,6 +3,7 @@ import connectionPool from "./utils/db.mjs";
 import { Router } from "express";
 import questionValidationCreate from "./middleware/questionValidationCreate.mjs";
 import questionValidationUpdate from "./middleware/questionValidationUpdate.mjs";
+import questionSearchValidation from "./middleware/questionValidationSearch.mjs";
 
 const app = express();
 const port = 4000;
@@ -37,6 +38,48 @@ app.post("/questions",  questionValidationCreate, async (req, res) => {
     console.error("Error in POST /questions:", error.message);
     return res.status(500).json({
       message: "Unable to create question.",
+      error: error.message,
+    });
+  }
+});
+
+/** SEARCH QUESTION */
+/** localhost:4000/questions/search?title=search&category=music วิธีcheck */
+/** localhost:4000/questions/search?title=What%20is%20JavaScript%3F&category=Programming วิธีcheck */
+app.get("/questions/search", questionSearchValidation, async (req, res) => {
+  try {
+    const { title, category } = req.query;
+
+    const where = [];
+    const params = [];
+    let i = 1;
+
+    if (title) {
+      where.push(`title ILIKE $${i++}`);
+      params.push(`%${title}%`);
+    }
+
+    if (category) {
+      where.push(`category ILIKE $${i++}`);
+      params.push(`%${category}%`);
+    }
+
+    // ถ้ามีทั้ง title และ category ให้เชื่อมด้วย OR แทน AND
+    const condition = where.length > 1 ? where.join(" OR ") : where.join("");
+
+    const sql = `
+      SELECT id, title, description, category
+      FROM questions
+      ${condition ? `WHERE ${condition}` : ""}
+      ORDER BY id DESC
+    `;
+
+    const result = await connectionPool.query(sql, params);
+    return res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error("Error in GET /questions/search:", error.message);
+    return res.status(500).json({
+      message: "Unable to fetch questions.",
       error: error.message,
     });
   }
