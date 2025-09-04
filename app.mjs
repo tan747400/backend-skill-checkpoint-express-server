@@ -44,10 +44,34 @@ app.post("/questions",  ValidationQuestionData, async (req, res) => {
 app.get("/questions", async (req, res) => {
   try {
     const results = await connectionPool.query(`SELECT * FROM questions`);
-    return res.status(200).json({ data: results.ro
-      ws });
+    return res.status(200).json({ data: results.rows });
   } catch (error) {
     console.error("Error in GET /questions:", error.message);
+    return res.status(500).json({
+      message: "Unable to fetch questions.",
+      error: error.message,
+    });
+  }
+});
+
+/** READ ONE */
+app.get("/questions/:questionId", async (req, res) => {
+  try {
+    const questionIdFromUser = Number(req.params.questionId);
+    const results = await connectionPool.query(
+      `SELECT * FROM questions WHERE id = $1`,
+      [questionIdFromUser]
+    );
+
+    if (!results.rows[0]) {
+      return res
+        .status(404)
+        .json({ message: "Question not found." });
+    }
+
+    return res.status(200).json({ data: results.rows[0] });
+  } catch (error) {
+    console.error("Error in GET /questions/:questionId:", error.message);
     return res.status(500).json({
       message: "Unable to fetch questions.",
       error: error.message,
