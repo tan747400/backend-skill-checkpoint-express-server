@@ -205,6 +205,34 @@ app.post("/questions/:questionId/answers", answerValidationCreate, async (req, r
   }
 });
 
+/** READ ONE ANSWER*/
+app.get("/questions/:questionId/answers", async (req, res) => {
+  const questionId = Number(req.params.questionId);
+
+  try {
+    const questionCheck = await connectionPool.query(
+      `SELECT id FROM questions WHERE id = $1`,
+      [questionId]
+    );
+
+    if (questionCheck.rowCount === 0) {
+      return res.status(404).json({ message: "Question not found." });
+    }
+    const result = await connectionPool.query(
+      `SELECT id, content FROM answers WHERE question_id = $1 ORDER BY id ASC`,
+      [questionId]
+    );
+
+    return res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error("Error in GET /questions/:questionId/answers:", error.message);
+    return res.status(500).json({
+      message: "Unable to fetch answers.",
+      error: error.message,
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running at ${port}`);
 });
