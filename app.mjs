@@ -1,6 +1,8 @@
 import express from "express";
 import connectionPool from "./utils/db.mjs";
+import { Router } from "express";
 import questionValidationCreate from "./middleware/questionValidationCreate.mjs";
+import questionValidationUpdate from "./middleware/questionValidationUpdate.mjs";
 
 const app = express();
 const port = 4000;
@@ -76,6 +78,37 @@ app.get("/questions/:questionId", async (req, res) => {
       message: "Unable to fetch questions.",
       error: error.message,
     });
+  }
+});
+
+/** UPDATE */
+/** เราไม่เขียนcategoryใน app.putนี้ เพราะจากโจทย์บอกว่า 
+ * ผู้ใช้งานสามารถที่จะแก้ไขหัวข้อ หรือคำอธิบายของคำถามได้
+ * ไม่ได้บอกว่าผู้ใช้งานสามารถเปลี่ยนแปลง category ได้
+ * ซึ่งเราจะไปเขียนดักไว้ในกรณีที่ผู้ใช้งานป้อนข้อมูลว่าต้องการเปลี่ยนแปลงcategory
+ * ที่middlewareอีกที
+*/
+app.put("/questions/:questionId", questionValidationUpdate, async (req, res) => {
+  try {
+    const questionId = Number(req.params.questionId);
+    const { title, description } = req.body; 
+
+    const result = await connectionPool.query(
+      `UPDATE questions
+       SET title = COALESCE($2, title),
+           description = COALESCE($3, description)
+       WHERE id = $1`,
+      [questionId, title, description]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Question not found." });
+    }
+
+    return res.status(200).json({ message: "Question updated successfully." });
+  } catch (error) {
+    console.error("Error in PUT /questions/:questionId:", error.message);
+    return res.status(500).json({ message: "Unable to fetch questions." });
   }
 });
 
