@@ -79,7 +79,7 @@ app.get("/questions/search", questionSearchValidation, async (req, res) => {
   } catch (error) {
     console.error("Error in GET /questions/search:", error.message);
     return res.status(500).json({
-      message: "Unable to fetch questions.",
+      message: "Unable to fetch a question.",
       error: error.message,
     });
   }
