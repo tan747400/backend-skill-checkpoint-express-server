@@ -40,6 +40,21 @@ app.post("/questions",  ValidationQuestionData, async (req, res) => {
   }
 });
 
+/** READ ALL */
+app.get("/questions", async (req, res) => {
+  try {
+    const results = await connectionPool.query(`SELECT * FROM questions`);
+    return res.status(200).json({ data: results.ro
+      ws });
+  } catch (error) {
+    console.error("Error in GET /questions:", error.message);
+    return res.status(500).json({
+      message: "Unable to fetch questions.",
+      error: error.message,
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running at ${port}`);
 });
