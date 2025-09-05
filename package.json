@@ -1,19 +1,27 @@
 {
   "name": "express-server-template",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
+  "description": "Skill Checkpoint Express Server for Questions, Answers, Votes, and Scores",
   "main": "app.mjs",
+  "type": "module",
   "scripts": {
-    "start": "nodemon app.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app.mjs",
+    "start": "node app.mjs",
+    "vercel-build": "echo \"No build step required\"",
+    "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["express", "vercel", "swagger", "postgresql"],
+  "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
-    "nodemon": "^3.1.10",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   },
   "repository": {
     "type": "git",
@@ -22,5 +30,8 @@
   "bugs": {
     "url": "https://github.com/tan747400/backend-skill-checkpoint-express-server/issues"
   },
-  "homepage": "https://github.com/tan747400/backend-skill-checkpoint-express-server#readme"
+  "homepage": "https://github.com/tan747400/backend-skill-checkpoint-express-server#readme",
+  "engines": {
+    "node": ">=18"
+  }
 }

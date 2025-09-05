@@ -6,6 +6,48 @@ import answerValidationCreate from "../middleware/answerValidationCreate.mjs";
 
 const answerRouter = Router();
 
+/**
+ * @openapi
+ * /questions/{questionId}/answers:
+ *   post:
+ *     summary: Create a new answer for a question
+ *     tags:
+ *       - Answers
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 example: "This is an example answer."
+ *     responses:
+ *       201:
+ *         description: Answer created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: { type: string }
+ *                 id: { type: integer }
+ *       400:
+ *         description: Invalid input data
+ *       404:
+ *         description: Question not found
+ *       500:
+ *         description: Unable to create answer
+ */
 /** CREATE ANSWERS */
 answerRouter.post("/:questionId/answers", answerValidationCreate, async (req, res) => {
     const questionId = Number(req.params.questionId);
@@ -32,6 +74,39 @@ answerRouter.post("/:questionId/answers", answerValidationCreate, async (req, re
     }
   });
   
+/**
+ * @openapi
+ * /questions/{questionId}/answers:
+ *   get:
+ *     summary: Get all answers for a question
+ *     tags:
+ *       - Answers
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: List of answers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id: { type: integer }
+ *                       content: { type: string }
+ *       404:
+ *         description: Question not found
+ *       500:
+ *         description: Unable to fetch answers
+ */
   /** READ ONE ANSWER*/
 answerRouter.get("/:questionId/answers", async (req, res) => {
     const questionId = Number(req.params.questionId);
@@ -59,7 +134,34 @@ answerRouter.get("/:questionId/answers", async (req, res) => {
       });
     }
   });
-  
+
+/**
+ * @openapi
+ * /questions/{questionId}/answers:
+ *   delete:
+ *     summary: Delete all answers for a question
+ *     tags:
+ *       - Answers
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: All answers deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: { type: string }
+ *       404:
+ *         description: Question not found
+ *       500:
+ *         description: Unable to delete answers
+ */
   /**
    * DELETE /questions/:questionId/answers
    * 

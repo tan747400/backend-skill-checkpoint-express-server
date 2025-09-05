@@ -6,6 +6,41 @@ import answerExists from "../middleware/answerExists.mjs";
 const scoreRouter = Router();
 
 /**
+ * @openapi
+ * /questions/{questionId}/score:
+ *   get:
+ *     summary: Get score summary for a question
+ *     tags:
+ *       - Scores
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Score summary for the question
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 plus:
+ *                   type: integer
+ *                   example: 3
+ *                 minus:
+ *                   type: integer
+ *                   example: 1
+ *                 score:
+ *                   type: integer
+ *                   example: 2
+ *       404:
+ *         description: Question not found.
+ *       500:
+ *         description: Unable to get question score.
+ */
+/**
  * GET /questions/:questionId/score
  * คืนค่าผลรวมโหวตของ questionId ที่ส่งมา
  * response: { plus: จำนวนโหวต +1, minus: จำนวนโหวต -1, score: บวก-ลบ }
@@ -37,6 +72,41 @@ scoreRouter.get("/questions/:questionId/score", questionExists, async (req, res)
   });
 });
 
+/**
+ * @openapi
+ * /answers/{answerId}/score:
+ *   get:
+ *     summary: Get score summary for an answer
+ *     tags:
+ *       - Scores
+ *     parameters:
+ *       - in: path
+ *         name: answerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Score summary for the answer
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 plus:
+ *                   type: integer
+ *                   example: 2
+ *                 minus:
+ *                   type: integer
+ *                   example: 0
+ *                 score:
+ *                   type: integer
+ *                   example: 2
+ *       404:
+ *         description: Answer not found.
+ *       500:
+ *         description: Unable to get answer score.
+ */
 /**
  * GET /answers/:answerId/score
  * คืนค่าผลรวมโหวตของ answerId ที่ส่งมา

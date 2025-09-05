@@ -9,6 +9,41 @@ import questionSearchValidation from "../middleware/questionValidationSearch.mjs
 
 const questionRouter = Router();
 
+/**
+ * @openapi
+ * /questions:
+ *   post:
+ *     summary: Create a new question
+ *     tags:
+ *       - Questions
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - category
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "What is JavaScript?"
+ *               description:
+ *                 type: string
+ *                 example: "Explain JavaScript basics"
+ *               category:
+ *                 type: string
+ *                 example: "Programming"
+ *     responses:
+ *       201:
+ *         description: Question created successfully
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Unable to create question
+ */
 /** CREATE QUESTION */
 questionRouter.post("/",  questionValidationCreate, async (req, res) => {
     const newQuestion = {
@@ -37,7 +72,31 @@ questionRouter.post("/",  questionValidationCreate, async (req, res) => {
       });
     }
   });
-  
+
+/**
+ * @openapi
+ * /questions/search:
+ *   get:
+ *     summary: Search questions by title or category
+ *     tags:
+ *       - Questions
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Title of the question
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Category of the question
+ *     responses:
+ *       200:
+ *         description: List of questions
+ *       500:
+ *         description: Unable to fetch questions
+ */ 
   /** SEARCH QUESTION */
   /** localhost:4000/questions/search?title=search&category=music วิธีcheck */
   /** localhost:4000/questions/search?title=What%20is%20JavaScript%3F&category=Programming วิธีcheck */
@@ -79,7 +138,20 @@ questionRouter.post("/",  questionValidationCreate, async (req, res) => {
       });
     }
   });
-  
+
+/**
+ * @openapi
+ * /questions:
+ *   get:
+ *     summary: Get all questions
+ *     tags:
+ *       - Questions
+ *     responses:
+ *       200:
+ *         description: List of all questions
+ *       500:
+ *         description: Unable to fetch questions
+ */
   /** READ ALL */
   questionRouter.get("/", async (req, res) => {
     try {
@@ -93,7 +165,28 @@ questionRouter.post("/",  questionValidationCreate, async (req, res) => {
       });
     }
   });
-  
+
+/**
+ * @openapi
+ * /questions/{questionId}:
+ *   get:
+ *     summary: Get a question by ID
+ *     tags:
+ *       - Questions
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Question details
+ *       404:
+ *         description: Question not found
+ *       500:
+ *         description: Unable to fetch question
+ */   
   /** READ ONE */
   questionRouter.get("/:questionId", async (req, res) => {
     try {
@@ -119,6 +212,40 @@ questionRouter.post("/",  questionValidationCreate, async (req, res) => {
     }
   });
   
+/**
+ * @openapi
+ * /questions/{questionId}:
+ *   put:
+ *     summary: Update title or description of a question
+ *     tags:
+ *       - Questions
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Updated title"
+ *               description:
+ *                 type: string
+ *                 example: "Updated description"
+ *     responses:
+ *       200:
+ *         description: Question updated successfully
+ *       404:
+ *         description: Question not found
+ *       500:
+ *         description: Unable to update question
+ */
   /** UPDATE */
   /** เราไม่เขียนcategoryใน app.putนี้ เพราะจากโจทย์บอกว่า 
    * ผู้ใช้งานสามารถที่จะแก้ไขหัวข้อ หรือคำอธิบายของคำถามได้
@@ -150,6 +277,27 @@ questionRouter.post("/",  questionValidationCreate, async (req, res) => {
     }
   });
   
+/**
+ * @openapi
+ * /questions/{questionId}:
+ *   delete:
+ *     summary: Delete a question by ID
+ *     tags:
+ *       - Questions
+ *     parameters:
+ *       - in: path
+ *         name: questionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Question deleted successfully
+ *       404:
+ *         description: Question not found
+ *       500:
+ *         description: Unable to delete question
+ */ 
   /** DELETE QUESTION */
   questionRouter.delete("/:questionId", async (req, res) => {
     try {
