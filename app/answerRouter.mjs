@@ -76,7 +76,7 @@ answerRouter.get("/:questionId/answers", async (req, res) => {
    * 
    * โดย endpoint นี้จะลบเฉพาะคำตอบของคำถามที่ระบุ ไม่ได้ลบคำถามเอง
    */
-answerRouter.delete("/:questionId/answers", async (req, res) => {
+answerRouter.delete("/questions/:questionId/answers", async (req, res) => {
     try {
       const questionId = Number(req.params.questionId);
   

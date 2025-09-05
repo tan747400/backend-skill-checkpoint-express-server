@@ -27,7 +27,7 @@ questionRouter.post("/",  questionValidationCreate, async (req, res) => {
   
       return res.status(201).json({
         message: "Question created successfully.",
-        id: result.rows[0].id, // DB สร้างให้เอง
+        id: result.rows[0].id, 
       });
     } catch (error) {
       console.error("Error in POST /questions:", error.message);
