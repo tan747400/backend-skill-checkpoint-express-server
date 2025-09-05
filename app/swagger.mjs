@@ -16,7 +16,7 @@ export const swaggerSpec = swaggerJSDoc({
       },
     ],
   },
-  apis: ["app/*.mjs", "app/**/*.mjs"], // ให้ swagger-jsdoc อ่าน JSDoc ในทุกไฟล์ .mjs
+  apis: ["app/*.mjs", "app/**/*.mjs"],
 });
 
 export function mountSwagger(app) {

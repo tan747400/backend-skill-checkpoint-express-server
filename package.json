@@ -11,7 +11,12 @@
     "vercel-build": "echo \"No build step required\"",
     "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": ["express", "vercel", "swagger", "postgresql"],
+  "keywords": [
+    "express",
+    "vercel",
+    "swagger",
+    "postgresql"
+  ],
   "author": "Your Name",
   "license": "ISC",
   "dependencies": {
