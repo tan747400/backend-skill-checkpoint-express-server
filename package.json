@@ -11,14 +11,6 @@
     "vercel-build": "echo \"No build step required\"",
     "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": [
-    "express",
-    "vercel",
-    "swagger",
-    "postgresql"
-  ],
-  "author": "Your Name",
-  "license": "ISC",
   "dependencies": {
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
@@ -29,14 +21,6 @@
   "devDependencies": {
     "nodemon": "^3.1.10"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tan747400/backend-skill-checkpoint-express-server.git"
-  },
-  "bugs": {
-    "url": "https://github.com/tan747400/backend-skill-checkpoint-express-server/issues"
-  },
-  "homepage": "https://github.com/tan747400/backend-skill-checkpoint-express-server#readme",
   "engines": {
     "node": ">=18"
   }
