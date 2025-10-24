@@ -1,6 +1,8 @@
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 
+const productionUrl = process.env.API_URL;
+
 export const swaggerSpec = swaggerJSDoc({
   definition: {
     openapi: "3.0.3",
@@ -10,16 +12,36 @@ export const swaggerSpec = swaggerJSDoc({
       description: "API docs for questions, answers, votes, and scores",
     },
     servers: [
+      ...(productionUrl
+        ? [
+            {
+              url: productionUrl,
+              description: "Production",
+            },
+          ]
+        : []),
       {
-        url: process.env.API_URL || "http://localhost:4000",
-        description: "Current Environment",
-      },
+        url: "http://localhost:4000",
+        description: "Local Dev",
+      }
     ],
   },
+  // สแกน JSDoc บน router ทั้งหมดของคุณ
   apis: ["app/*.mjs", "app/**/*.mjs"],
 });
 
 export function mountSwagger(app) {
-  app.get("/docs.json", (_req, res) => res.json(swaggerSpec));
-  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+  // raw spec (useful for client generation / healthcheck)
+  app.get("/docs.json", (_req, res) => {
+    res.json(swaggerSpec);
+  });
+
+  // pretty UI
+  app.use(
+    "/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      explorer: true,
+    })
+  );
 }

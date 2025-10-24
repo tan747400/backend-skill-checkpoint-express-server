@@ -1,5 +1,6 @@
-import "dotenv/config";               // ใช้ได้ตอน local (มี .env)
+import "dotenv/config";
 import express from "express";
+
 import questionRouter from "./app/questionRouter.mjs";
 import answerRouter from "./app/answerRouter.mjs";
 import voteRouter from "./app/voteRouter.mjs";
@@ -10,18 +11,26 @@ const app = express();
 const port = 4000;
 
 app.use(express.json());
+
+// Swagger docs (/docs, /docs.json)
 mountSwagger(app);
 
-app.get("/test", (_req, res) => res.json("Server API is working 🚀"));
+// simple healthcheck
+app.get("/test", (_req, res) => {
+  res.json("Server API is working 🚀");
+});
 
+// routes
 app.use("/questions", questionRouter);
 app.use("/questions", answerRouter);
 app.use("/", voteRouter);
 app.use("/", scoreRouter);
 
-// ฟังพอร์ตเฉพาะตอนรันในเครื่อง
+// local only, don't listen on Vercel
 if (process.env.VERCEL !== "1") {
-  app.listen(port, () => console.log(`Server is running at ${port}`));
+  app.listen(port, () => {
+    console.log(`Server is running at ${port}`);
+  });
 }
 
 export default app;
