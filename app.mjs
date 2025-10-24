@@ -12,7 +12,7 @@ const port = 4000;
 
 app.use(express.json());
 
-// Swagger docs
+// docs
 mountSwagger(app);
 
 // healthcheck
@@ -20,13 +20,13 @@ app.get("/test", (_req, res) => {
   res.json("Server API is working 🚀");
 });
 
-// main routes
+// routes
 app.use("/questions", questionRouter);
 app.use("/questions", answerRouter);
 app.use("/", voteRouter);
 app.use("/", scoreRouter);
 
-// local dev only
+// local only
 if (process.env.VERCEL !== "1") {
   app.listen(port, () => {
     console.log(`Server is running at ${port}`);
